@@ -9,7 +9,7 @@ pipeline {
             steps {
                 nodejs("NodeJS") {
                     // usa npm ci pra garantir install limpo
-                    sh 'npm ci'
+                    sh 'npm install'
                     // build gera a pasta .next
                     sh 'npm run build'
                 }
