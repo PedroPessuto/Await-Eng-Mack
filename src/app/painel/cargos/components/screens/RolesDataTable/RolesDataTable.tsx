@@ -55,6 +55,7 @@ import {
   Trash2,
   Trash2Icon,
 } from 'lucide-react'
+import Link from 'next/link'
 import * as React from 'react'
 import { use, useState } from 'react'
 import { toast } from 'sonner'
@@ -350,7 +351,7 @@ export function RolesDataTable({ data, error }: RolesDataTableProps) {
     {
       id: 'actions',
       header: 'Ações',
-      cell: () => (
+      cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="w-8 p-0">
@@ -360,9 +361,11 @@ export function RolesDataTable({ data, error }: RolesDataTableProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <Eye />
-              Visualizar
+            <DropdownMenuItem asChild>
+              <Link href={`/painel/cargos/@${row.original.id}`}>
+                <Eye />
+                Visualizar
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <SquarePen />

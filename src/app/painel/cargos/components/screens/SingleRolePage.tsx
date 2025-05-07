@@ -7,8 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { Home } from 'lucide-react'
-import { Overview } from './Overview'
+import { Home, Pencil, Trash } from 'lucide-react'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -18,12 +17,16 @@ import {
 } from '@/components/ui/navigation-menu'
 import { cn } from '@/lib/utils/cn'
 import { ChevronRight } from 'lucide-react'
+import { Role } from '@/lib/models/Role'
+import { Button } from '@/components/ui/button'
 
 interface SingleRolePageProps {
   section: string
+  id: string
+  role: Role
 }
 
-export function SingleRolePage({ section }: SingleRolePageProps) {
+export function SingleRolePage({ section, id, role }: SingleRolePageProps) {
   return (
     <>
       <header className="flex flex-col gap-4 overflow-x-hidden">
@@ -52,6 +55,12 @@ export function SingleRolePage({ section }: SingleRolePageProps) {
                     Cargos
                   </BreadcrumbPage>
                 </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-primary">
+                    {role.name}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
 
@@ -62,19 +71,21 @@ export function SingleRolePage({ section }: SingleRolePageProps) {
 
           <div className="flex w-full flex-col items-center justify-between gap-4 bg-white md:flex-row md:gap-0">
             <div className="w-full space-y-2">
-              <H1>Cargos</H1>
+              <H1>{role.name}</H1>
               <h2 className="line-clamp-3 text-base text-muted-foreground md:line-clamp-2">
                 CRUD de Cargos
               </h2>
             </div>
 
-            {/* <div className="flex w-full flex-col gap-4 sm:flex-row sm:justify-end">
-              {section === 'cargos' && (
-                <Button>
-                  <span>Criar Novo Cargo</span>
-                </Button>
-              )}
-            </div> */}
+            <div className="flex w-full flex-col gap-4 sm:flex-row sm:justify-end">
+              <Button>
+                <Pencil />
+                <span>Editar</span>
+              </Button>
+              <Button variant="destructive">
+                <Trash />
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -93,7 +104,7 @@ export function SingleRolePage({ section }: SingleRolePageProps) {
                         `${(section === 'visao-geral' || section === 'membros') && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
                       )}
                     >
-                      Visão Geral
+                      Informações
                     </NavigationMenuLink>
                 </div>
               </NavigationMenuItem>
@@ -109,7 +120,7 @@ export function SingleRolePage({ section }: SingleRolePageProps) {
                         `${section === 'categorias' && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
                       )}
                     >
-                      Categorias
+                      Permissões
                     </NavigationMenuLink>
                 </div>
               </NavigationMenuItem>
@@ -125,7 +136,7 @@ export function SingleRolePage({ section }: SingleRolePageProps) {
                         `${section === 'atividades' && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
                       )}
                     >
-                      Atividades
+                      Campos Personalizados
                     </NavigationMenuLink>
                 </div>
               </NavigationMenuItem>

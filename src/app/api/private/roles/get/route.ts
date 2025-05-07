@@ -7,11 +7,11 @@ export async function GET() {
 
   const data = [
     {
-      id: randomUUID(),
+      id: "3bc69a18-ae0f-4ba2-bf1f-84ab4b8564d9",
       name: 'Administracao',
       categories: [
         {
-          id: randomUUID(),
+          id: "3bc69a18-ae0f-4ba2-bf1f-84ab4b8564d9",
           name: 'Global',
         },
         {
