@@ -23,33 +23,33 @@
     const urlPathname = req.nextUrl.pathname
     const baseUrl = process.env.BASE_URL || "http://localhost:3000"
 
-    if (
-      urlPathname.includes('private') 
-      // || urlPathname.includes(PROTECTED_ROUTES.toString())
-    ) {
+    // if (
+    //   urlPathname.includes('private') 
+    //   // || urlPathname.includes(PROTECTED_ROUTES.toString())
+    // ) {
 
-      if (!sessionId) {
-        return NextResponse.json({ error: "Nao autorizado" }, {status: 401})
-        return NextResponse.redirect(new URL('/', baseUrl))
-      }
+    //   if (!sessionId) {
+    //     return NextResponse.json({ error: "Nao autorizado" }, {status: 401})
+    //     return NextResponse.redirect(new URL('/', baseUrl))
+    //   }
 
-      const userResponse = await fetch(
-        `http://localhost:3000/api/auth/getUser/?sessionId=${sessionId}`
-      )
+    //   const userResponse = await fetch(
+    //     `http://localhost:3000/api/auth/getUser/?sessionId=${sessionId}`
+    //   )
 
-      if (!userResponse.ok || userResponse.status !== 200) {
-        return NextResponse.json({ error: "Nao autorizado" }, {status: 401})
-        return NextResponse.redirect(new URL('/', baseUrl))
-      }
+    //   if (!userResponse.ok || userResponse.status !== 200) {
+    //     return NextResponse.json({ error: "Nao autorizado" }, {status: 401})
+    //     return NextResponse.redirect(new URL('/', baseUrl))
+    //   }
 
-      const { data: user } = (await userResponse.json()) as userRequestProps
+    //   const { data: user } = (await userResponse.json()) as userRequestProps
 
-      if (!user) {
-        return NextResponse.json({ error: "Nao autorizado" }, {status: 401})
-        return NextResponse.redirect(baseUrl)
-      }
+    //   if (!user) {
+    //     return NextResponse.json({ error: "Nao autorizado" }, {status: 401})
+    //     return NextResponse.redirect(baseUrl)
+    //   }
 
-    }
+    // }
 
     return response
   }

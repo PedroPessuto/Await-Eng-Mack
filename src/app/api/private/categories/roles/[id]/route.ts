@@ -1,7 +1,7 @@
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
-    const res = await fetch(`http://localhost:3001/categories-roles/${id}`);
+    const res = await fetch(`http://127.0.0.1:49412/api/categories-roles-roles/${id}`);
     if (!res.ok) {
       return new Response(JSON.stringify({ error: 'Categoria não encontrada' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
     }
@@ -16,7 +16,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   try {
     const { id } = params;
     const payload = await request.json();
-    const res = await fetch(`http://localhost:3001/categories-roles/${id}`, {
+    const res = await fetch(`http://127.0.0.1:49412/api/categories-roles-roles/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -35,7 +35,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
-    const res = await fetch(`http://localhost:3001/categories-roles/${id}`, {
+    const res = await fetch(`http://127.0.0.1:49412/api/categories-roles-roles/${id}`, {
       method: 'DELETE',
     });
     if (!res.ok) {

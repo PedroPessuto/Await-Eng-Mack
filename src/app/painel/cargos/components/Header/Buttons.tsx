@@ -32,13 +32,23 @@ export function Buttons({ section }: ButtonsProps) {
   })
 
   const onSubmitCargo = async (values: CargoFormData) => {
-    await fetch('http://localhost:3001/cargos', {
+
+    const res = await fetch('/api/private/roles/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(values),
     })
-    resetCargo()
-    router.refresh()
+
+    if (res.ok) {
+      const data = await res.json();
+      console.log(data)
+      resetCargo()
+      router.refresh()
+    }
+    else {
+      console.error('Falha ao criar cargo', res.status, await res.text())
+    }
+    
   }
 
   // Schema and form for Categorias
@@ -57,7 +67,7 @@ export function Buttons({ section }: ButtonsProps) {
   })
 
   const onSubmitCategory = async (values: CategoryFormData) => {
-    await fetch('http://localhost:3001/categories', {
+    await fetch('http://127.0.0.1:49412/api/categories-roles', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(values),
