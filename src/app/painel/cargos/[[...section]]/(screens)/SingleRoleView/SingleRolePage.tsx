@@ -124,10 +124,10 @@ export async function SingleRolePage({ section, id, role }: SingleRolePageProps)
             </div>
 
             <div className="flex w-full flex-col gap-4 sm:flex-row sm:justify-end">
-              <Button>
+              {/* <Button>
                 <Pencil />
                 <span>Editar</span>
-              </Button>
+              </Button> */}
               <Button variant="destructive">
                 <Trash />
               </Button>
@@ -170,7 +170,7 @@ export async function SingleRolePage({ section, id, role }: SingleRolePageProps)
                     </NavigationMenuLink>
                 </div>
               </NavigationMenuItem>
-              <div className="m-2 inline-block w-0.5 self-stretch bg-neutral-200" />
+              {/* <div className="m-2 inline-block w-0.5 self-stretch bg-neutral-200" />
               <NavigationMenuItem>
                 <div
                   className={`py-1.5 ${section === 'campos' && 'border-primary border-b-2'}`}
@@ -185,7 +185,7 @@ export async function SingleRolePage({ section, id, role }: SingleRolePageProps)
                       Campos Personalizados
                     </NavigationMenuLink>
                 </div>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -206,7 +206,7 @@ export async function SingleRolePage({ section, id, role }: SingleRolePageProps)
          {
           section === "permissoes" && (
           <>
-            <PermissionForm section={section} id={id} role={role}/>
+            <PermissionForm section={section} id={id}/>
           </>
           )
         }

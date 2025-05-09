@@ -367,10 +367,10 @@ export function RolesDataTable({ data, error }: RolesDataTableProps) {
                 Visualizar
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem>
               <SquarePen />
               Editar
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">
               <Trash2 />
