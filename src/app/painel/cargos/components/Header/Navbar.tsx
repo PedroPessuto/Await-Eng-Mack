@@ -53,7 +53,7 @@ export async function Navbar({ section }: NavbarProps) {
                   </NavigationMenuLink>
               </div>
             </NavigationMenuItem>
-            <div className="m-2 inline-block w-0.5 self-stretch bg-neutral-200" />
+            {/* <div className="m-2 inline-block w-0.5 self-stretch bg-neutral-200" />
             <NavigationMenuItem>
               <div
                 className={`py-1.5 ${section === 'atividades' && 'border-primary border-b-2'}`}
@@ -68,7 +68,7 @@ export async function Navbar({ section }: NavbarProps) {
                     Atividades
                   </NavigationMenuLink>
               </div>
-            </NavigationMenuItem>
+            </NavigationMenuItem> */}
           </NavigationMenuList>
         </NavigationMenu>
       </div>

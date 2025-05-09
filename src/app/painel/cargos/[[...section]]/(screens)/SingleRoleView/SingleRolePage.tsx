@@ -1,3 +1,4 @@
+
 import { H1 } from '@/components/typography/H1'
 import {
   Breadcrumb,
@@ -19,14 +20,56 @@ import { cn } from '@/lib/utils/cn'
 import { ChevronRight } from 'lucide-react'
 import { Role } from '@/lib/models/Role'
 import { Button } from '@/components/ui/button'
+import { InfoForm } from './(sections)/InfoForm'
+import { PermissionForm } from './(sections)/PermissionForm'
+import { Category } from '@/lib/models/Category'
+import { cookies } from 'next/headers'
 
 interface SingleRolePageProps {
   section: string
   id: string
   role: Role
 }
+  
+interface GetCategoriesFetchProps {
+  data: Category[],
+  error?: string
+}
 
-export function SingleRolePage({ section, id, role }: SingleRolePageProps) {
+export async function SingleRolePage({ section, id, role }: SingleRolePageProps) {
+
+  let categories: Category[] = []
+  let error
+  
+  if (section === "informacoes") {
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
+    const cookieStore = await cookies()
+    const cookieHeader = cookieStore.toString()
+
+    const response = await fetch(`${baseUrl}/api/private/categories/roles/getAll`, {
+      method: "GET",
+      headers: { cookie: cookieHeader },
+    })
+
+    if (!response.ok) {
+      try {
+        const json = await response.json()
+        error = json.error || 'Erro ao carregar sua solicitação'
+      } catch {
+        error = 'Erro ao carregar sua solicitação'
+      }
+    } 
+    else {
+      try {
+        const json = await response.json() as GetCategoriesFetchProps
+        categories = json.data ?? []
+        if (json.error) error = json.error
+      } catch {
+        error = 'Erro ao ler os dados'
+      }
+    }
+  }
+
   return (
     <>
       <header className="flex flex-col gap-4 overflow-x-hidden">
@@ -51,9 +94,12 @@ export function SingleRolePage({ section, id, role }: SingleRolePageProps) {
                 </BreadcrumbItem> */}
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="text-primary">
-                    Cargos
-                  </BreadcrumbPage>
+                  <BreadcrumbLink
+                      href="/painel/cargos"
+                      className="text-primary "
+                    >
+                      Cargos
+                    </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
@@ -73,7 +119,7 @@ export function SingleRolePage({ section, id, role }: SingleRolePageProps) {
             <div className="w-full space-y-2">
               <H1>{role.name}</H1>
               <h2 className="line-clamp-3 text-base text-muted-foreground md:line-clamp-2">
-                CRUD de Cargos
+                {role.description}
               </h2>
             </div>
 
@@ -95,13 +141,13 @@ export function SingleRolePage({ section, id, role }: SingleRolePageProps) {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <div
-                  className={`py-1.5 ${(section === 'visao-geral' || section === 'membros') && 'border-primary border-b-2'}`}
+                  className={`py-1.5 ${(section === 'informacoes') && 'border-primary border-b-2'}`}
                 >
                     <NavigationMenuLink
-                    href="/painel/cargos/"
+                      href={`/painel/cargos/@${id}/informacoes`}
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        `${(section === 'visao-geral' || section === 'membros') && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
+                        `${(section === 'informacoes') && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
                       )}
                     >
                       Informações
@@ -111,13 +157,13 @@ export function SingleRolePage({ section, id, role }: SingleRolePageProps) {
               <div className="m-2 inline-block w-0.5 self-stretch bg-neutral-200" />
               <NavigationMenuItem>
                 <div
-                  className={`py-1.5 ${section === 'categorias' && 'border-primary border-b-2'}`}
+                  className={`py-1.5 ${section === 'permissoes' && 'border-primary border-b-2'}`}
                 >
                     <NavigationMenuLink
-                    href="/painel/cargos/categorias"
+                      href={`/painel/cargos/@${id}/permissoes`}
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        `${section === 'categorias' && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
+                        `${section === 'permissoes' && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
                       )}
                     >
                       Permissões
@@ -127,13 +173,13 @@ export function SingleRolePage({ section, id, role }: SingleRolePageProps) {
               <div className="m-2 inline-block w-0.5 self-stretch bg-neutral-200" />
               <NavigationMenuItem>
                 <div
-                  className={`py-1.5 ${section === 'atividades' && 'border-primary border-b-2'}`}
+                  className={`py-1.5 ${section === 'campos' && 'border-primary border-b-2'}`}
                 >
                     <NavigationMenuLink
-                    href="/painel/cargos/atividades" 
+                      href={`/painel/cargos/@${id}/campos`}
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        `${section === 'atividades' && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
+                        `${section === 'campos' && 'bg-primary/10 hover:bg-primary/10 focus:bg-primary/10'}`
                       )}
                     >
                       Campos Personalizados
@@ -150,7 +196,20 @@ export function SingleRolePage({ section, id, role }: SingleRolePageProps) {
       </header>
 
       <section>
-        dada
+        {
+          section === "informacoes" && (
+          <>
+            <InfoForm section={section} id={id} role={role} categories={categories} error={error}/>
+          </>
+          )
+        }
+         {
+          section === "permissoes" && (
+          <>
+            <PermissionForm section={section} id={id} role={role}/>
+          </>
+          )
+        }
       </section>
     </>
   )

@@ -28,8 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import type { Member } from '@/lib/models/Member'
-import { Role } from '@/lib/models/Role'
+import { Category } from '@/lib/models/Category'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -61,12 +60,12 @@ import { use, useState } from 'react'
 import { toast } from 'sonner'
 
 interface DataTableProps {
-  columns: ColumnDef<Role>[]
-  data: Role[]
+  columns: ColumnDef<Category>[]
+  data: Category[]
   error?: string
 }
 
-function RolesTable({ columns, data }: DataTableProps) {
+function CategoriesRoleTable({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -97,34 +96,14 @@ function RolesTable({ columns, data }: DataTableProps) {
 
   return (
     <>
-      <div className="flex w-full items-center gap-8 bg-amber-300">
-        <Button onClick={handleClick}>Logar</Button>
-        {user ? user.id : 'Nao tem usuario'}
-      </div>
-
       <div className="flex flex-col-reverse gap-2 py-4 md:flex-row md:items-center md:justify-between">
         <div className="flex gap-2 ">
           <Input
-            placeholder="Filtrar por Usuário ou E-mail"
+            placeholder="Filtrar por categoria"
             value={globalFilter}
             onChange={event => setGlobalFilter(event.target.value)}
             className="w-full sm:min-w-sm lg:min-w-md"
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <div>
-                <Button variant="outline">
-                  <Filter />
-                  <span className="hidden sm:inline">Filtros Avancados</span>
-                </Button>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Opcaoes disponivies</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Query Personalizada</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
 
         {table.getFilteredSelectedRowModel().rows.length > 0 ? (
@@ -136,7 +115,7 @@ function RolesTable({ columns, data }: DataTableProps) {
               >
                 <div className="flex items-center gap-2 overflow-x-hidden">
                   Ações para {table.getFilteredSelectedRowModel().rows.length}{' '}
-                  cargo(s)
+                  categoria(s)
                   <ChevronDown />
                 </div>
               </Button>
@@ -144,22 +123,13 @@ function RolesTable({ columns, data }: DataTableProps) {
             <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] max-h-[var(--radix-dropdown-menu-content-available-height)]">
               <DropdownMenuLabel>Ações Permitidas</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <MessageCircleMore />
-                Enviar Mensagem
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Mail />
-                Enviar E-mail
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setRowSelection({})}>
                 <Eraser />
                 Limpar Seleção
               </DropdownMenuItem>
               <DropdownMenuItem variant="destructive">
                 <Trash2Icon />
-                Remover
+                Excluir
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -174,7 +144,7 @@ function RolesTable({ columns, data }: DataTableProps) {
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Selecione ao menos um cargo</p>
+                <p>Selecione ao menos uma categoria</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -233,7 +203,7 @@ function RolesTable({ columns, data }: DataTableProps) {
       <div className="mt-2 flex flex-col items-center sm:mt-0 sm:flex-row">
         <div className="flex-1 text-center text-muted-foreground text-sm sm:text-start">
           {table.getFilteredSelectedRowModel().rows.length} de{' '}
-          {table.getFilteredRowModel().rows.length} cargo(s) selecionado(s).
+          {table.getFilteredRowModel().rows.length} categoria(s) selecionado(s).
         </div>
         <div className="flex flex-col items-center justify-end gap-2 space-x-2 py-4 sm:flex-row">
           <Button
@@ -258,19 +228,19 @@ function RolesTable({ columns, data }: DataTableProps) {
   )
 }
 
-interface RolesDataTableProps {
-  data: Role[]
+interface CategoriesRoleDataTableProps {
+  data: Category[]
   error?: string
 }
 
-export function RolesDataTable({ data, error }: RolesDataTableProps) {
+export function CategoriesRoleDataTable({ data, error }: CategoriesRoleDataTableProps) {
   if (error) {
     toast('Erro ao carregar dados', {
       description: error,
     })
   }
 
-  const columns: ColumnDef<Role>[] = [
+  const columns: ColumnDef<Category>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -291,19 +261,18 @@ export function RolesDataTable({ data, error }: RolesDataTableProps) {
         />
       ),
     },
-   
-      // {
-      //   accessorKey: 'id',
-      //   header: ({ column }) => (
-      //     <Button
-      //       variant="ghost"
-      //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      //     >
-      //       Id  
-      //       <ArrowUpDown className="ml-2 h-4 w-4" />
-      //     </Button>
-      //   ),
-      // },
+    // {
+    //   accessorKey: 'id',
+    //   header: ({ column }) => (
+    //     <Button
+    //       variant="ghost"
+    //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+    //     >
+    //       Id  
+    //       <ArrowUpDown className="ml-2 h-4 w-4" />
+    //     </Button>
+    //   ),
+    // },
     {
       accessorKey: 'name',
       header: ({ column }) => (
@@ -317,38 +286,6 @@ export function RolesDataTable({ data, error }: RolesDataTableProps) {
       ),
     },
     {
-      accessorKey: 'categories',
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Categorias
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
-      cell: ({ row }) => {
-
-        const categories = row.original.categories
-
-        return (
-          <div className='flex flex-wrap gap-2'>
-            {
-              categories.map((item) => {
-                return (
-                  <React.Fragment key={item.id}>
-                    <Badge variant="secondary">{item.name}</Badge>
-                  </React.Fragment>
-                )
-                
-              })
-            }
-          </div>
-        )
-      }
-    },
-   
-    {
       id: 'actions',
       header: 'Ações',
       cell: ({ row }) => (
@@ -361,20 +298,15 @@ export function RolesDataTable({ data, error }: RolesDataTableProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            <DropdownMenuItem asChild>
-              <Link href={`/painel/cargos/@${row.original.id}`}>
-                <Eye />
-                Visualizar
-              </Link>
-            </DropdownMenuItem>
+           
             <DropdownMenuItem>
               <SquarePen />
-              Editar
+              Renomear
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">
               <Trash2 />
-              <span>Remover</span>
+              <span>Excluir</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -382,5 +314,5 @@ export function RolesDataTable({ data, error }: RolesDataTableProps) {
     },
   ]
 
-  return <RolesTable columns={columns} data={data} />
+  return <CategoriesRoleTable columns={columns} data={data} />
 }

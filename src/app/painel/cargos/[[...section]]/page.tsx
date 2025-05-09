@@ -2,9 +2,10 @@
 
 import { notFound } from 'next/navigation'
 import { Header } from '../components/Header/Header'
-import { Overview } from '../components/screens/Overview'
-import { SingleRolePage } from '../components/screens/SingleRolePage'
+import { Overview } from './(screens)/OverviewView'
+import { SingleRolePage } from './(screens)/SingleRoleView/SingleRolePage'
 import { randomUUID } from 'crypto'
+import { CategoriesView } from './(screens)/CategoriesView/CategoriesView'
 
 interface PageProps {
   params: Promise<{
@@ -27,21 +28,24 @@ export default async function Page({ params, searchParams }: PageProps) {
     const role =  {
       id: "3bc69a18-ae0f-4ba2-bf1f-84ab4b8564d9",
       name: 'Administracao',
+      description: "",
       categories: [
         {
-          id: "3bc69a18-ae0f-4ba2-bf1f-84ab4b8564d9",
+          id: "3bc69a18-ae0f-4ba2-bf1f-84ab4b856488",
           name: 'Global',
         },
         {
-          id: "e03a8189-2f6f-466d-86c5-d4ba5c25c05d",
+          id: "3bc69a18-ae0f-4ba2-b22f-84ab4b856488",
           name: 'Caixa',
         }
       ],
     }
 
+    const rawSecond =  section?.[1] ? section[1] : 'informacoes'
+
     return (
       <div className="h-full space-y-6 bg-bg-theme p-4 md:p-8">
-        <SingleRolePage section={first} id={id} role={role}/>
+        <SingleRolePage section={rawSecond} id={id} role={role}/>
       </div>
     )
 
@@ -63,8 +67,8 @@ export default async function Page({ params, searchParams }: PageProps) {
           <Header section={tab} />
           <section>
             {tab === 'visao-geral' && <Overview />}
-            {tab === 'categorias' && 'Categorias'}
-            {tab === 'atividades' && 'Atividades'}
+            {tab === 'categorias' && <CategoriesView />}
+            {/* {tab === 'atividades' && 'Atividades'} */}
           </section>
         </>
         )

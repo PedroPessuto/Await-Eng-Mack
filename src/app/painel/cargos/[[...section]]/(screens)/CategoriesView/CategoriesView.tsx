@@ -1,21 +1,21 @@
 import { cookies } from 'next/headers'
-import { RolesDataTable } from './RolesDataTable/RolesDataTable'
-import { Role } from '@/lib/models/Role'
+import { Category } from '@/lib/models/Category'
+import { CategoriesRoleDataTable } from './CategoriesRoleDataTable'
   
-interface GetMemberFetchProps {
-  data: Role[],
+interface GetRolesCategoriesFetchProps {
+  data: Category[],
   error?: string
 }
 
-export async function Overview() {
-  let members: Role[] = []
+export async function CategoriesView() {
+  let categories: Category[] = []
   let error: string | undefined = undefined
 
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.toString()
 
-  const response = await fetch(`${baseUrl}/api/private/roles/get`, {
+  const response = await fetch(`${baseUrl}/api/private/categories/roles/getAll`, {
     method: "GET",
     headers: { cookie: cookieHeader },
   })
@@ -30,13 +30,13 @@ export async function Overview() {
   } 
   else {
     try {
-      const json = await response.json() as GetMemberFetchProps
-      members = json.data ?? []
+      const json = await response.json() as GetRolesCategoriesFetchProps
+      categories = json.data ?? []
       if (json.error) error = json.error
     } catch {
       error = 'Erro ao ler os dados'
     }
   }
 
-  return <RolesDataTable data={members} error={error} />
+  return <CategoriesRoleDataTable data={categories} error={error} ></CategoriesRoleDataTable>
 }

@@ -63,7 +63,7 @@ export async function Header({ section }: HeaderProps) {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage className="text-primary">
-                  Cargoslkki
+                  Cargos
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
