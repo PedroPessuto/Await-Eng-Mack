@@ -15,7 +15,7 @@ export async function Overview() {
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.toString()
 
-  const response = await fetch(`${baseUrl}/api/private/roles/get`, {
+  const response = await fetch(`${baseUrl}/api/private/roles`, {
     method: "GET",
     headers: { cookie: cookieHeader },
   })

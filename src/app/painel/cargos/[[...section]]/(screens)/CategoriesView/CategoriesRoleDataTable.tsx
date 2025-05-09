@@ -1,8 +1,7 @@
 'use client'
 
 import { AuthContext } from '@/components/providers/AuthProvider/AuthClientProvider'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose  } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -58,6 +57,7 @@ import Link from 'next/link'
 import * as React from 'react'
 import { use, useState } from 'react'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 interface DataTableProps {
   columns: ColumnDef<Category>[]
@@ -93,6 +93,7 @@ function CategoriesRoleTable({ columns, data }: DataTableProps) {
   const { user, handleLogin } = use(AuthContext)
   const handleClick = () =>
     handleLogin({ email: 'teste@gmail.com', password: '1213121121' })
+
 
   return (
     <>
@@ -240,6 +241,8 @@ export function CategoriesRoleDataTable({ data, error }: CategoriesRoleDataTable
     })
   }
 
+  const router = useRouter()
+
   const columns: ColumnDef<Category>[] = [
     {
       id: 'select',
@@ -288,29 +291,74 @@ export function CategoriesRoleDataTable({ data, error }: CategoriesRoleDataTable
     {
       id: 'actions',
       header: 'Ações',
-      cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-8 p-0">
-              <span className="sr-only">Abrir Menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Ações</DropdownMenuLabel>
-           
-            <DropdownMenuItem>
-              <SquarePen />
-              Renomear
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
-              <Trash2 />
-              <span>Excluir</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
+      cell: ({ row }) => {
+        const { id, name } = row.original
+
+        async function handleDelete() {
+          await fetch(`/api/private/categories/roles/${id}`, { method: 'DELETE' })
+          router.refresh()
+        }
+
+        async function handleRename(newName: string) {
+          await fetch(`/api/private/categories/roles/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...row.original, name: newName }),
+          })
+          router.refresh()
+        }
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="w-8 p-0">
+                <span className="sr-only">Abrir Menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" >
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
+              <DropdownMenuItem asChild>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <span>
+                      <SquarePen /> Renomear
+                    </span>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Renomear Categoria</DialogTitle>
+                    </DialogHeader>
+                    <input
+                      defaultValue={name}
+                      className="w-full border p-2 rounded mb-4"
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          handleRename((e.target as HTMLInputElement).value)
+                        }
+                      }}
+                    />
+                    <DialogFooter>
+                      <Button onClick={() => router.back()}>Cancelar</Button>
+                      <Button onClick={() => {
+                        const input = document.querySelector<HTMLInputElement>('input')
+                        if (input) handleRename(input.value)
+                      }}>
+                        Salvar
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive" onSelect={handleDelete}>
+                <Trash2 />
+                <span>Remover</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
     },
   ]
 

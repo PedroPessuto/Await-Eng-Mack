@@ -105,6 +105,9 @@
 }
 
 @layer base {
+  button, [role="button"] {
+    cursor: pointer;
+  }
   * {
     @apply border-border outline-ring/50;
   }

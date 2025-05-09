@@ -15,7 +15,7 @@ export async function CategoriesView() {
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.toString()
 
-  const response = await fetch(`${baseUrl}/api/private/categories/roles/getAll`, {
+  const response = await fetch(`${baseUrl}/api/private/categories/roles`, {
     method: "GET",
     headers: { cookie: cookieHeader },
   })

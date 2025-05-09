@@ -1,7 +1,7 @@
 'use client'
 
 import { AuthContext } from '@/components/providers/AuthProvider/AuthClientProvider'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose  } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -367,14 +367,32 @@ export function RolesDataTable({ data, error }: RolesDataTableProps) {
                 Visualizar
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <SquarePen />
-              Editar
+            <DropdownMenuItem asChild>
+               <Link href={`/painel/cargos/@${row.original.id}`}>
+                  <SquarePen />
+                  Editar
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
-              <Trash2 />
-              <span>Remover</span>
+            <DropdownMenuItem variant="destructive" asChild>
+              <Dialog>
+                <DialogTrigger >
+                  <Trash2 />
+                  <span>Remover</span>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Confirmação</DialogTitle>
+                    <DialogDescription>Tem certeza que deseja excluir este cargo?</DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                       <Button variant="outline" onClick={() => {}}>Cancelar</Button>
+                    </DialogClose>
+                    <Button variant="destructive" onClick={() => {}}>Excluir</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

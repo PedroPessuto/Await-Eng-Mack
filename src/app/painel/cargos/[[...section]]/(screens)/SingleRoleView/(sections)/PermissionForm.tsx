@@ -1,78 +1,126 @@
-
+// File: src/app/painel/cargos/[id]/(sections)/PermissionForm.tsx
 'use client'
 
-import { zodResolver } from "@hookform/resolvers/zod"
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, X } from 'lucide-react'
-import { Role } from '@/lib/models/Role'
 import { Button } from '@/components/ui/button'
-import { z } from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Category } from "@/lib/models/Category"
+import { z } from 'zod'
 
-interface SingleRolePageProps {
-  section: string
+// Permission model
+interface Permission {
   id: string
-  role: Role
+  name: string
 }
 
-export function PermissionForm({ section, id, role }: SingleRolePageProps) {
+interface PermissionFormProps {
+  section: string
+  id: string
+  rolePermissions?: string[]
+  allPermissions?: Permission[]
+}
 
-  const formSchema = z.object({
-    name: z.string().min(1).max(50),
-    description: z.string().max(500).optional(),
-    categories: z.string().array().optional(),
-  })
+// Validation schema
+const permissionSchema = z.object({
+  permissions: z.array(z.string()).optional(),
+})
+type FormData = z.infer<typeof permissionSchema>
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+export function PermissionForm({ section, id, rolePermissions = [], allPermissions = [] }: PermissionFormProps) {
+  const form = useForm<FormData>({
+    resolver: zodResolver(permissionSchema),
     defaultValues: {
-      name: role.name ?? "",
-      description: role.description ?? "",
-      categories: role.categories?.map(cat => cat.id) || [],
+      permissions: rolePermissions,
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // recarregar a pagina
-    console.log(values)
+  function onSubmit(values: FormData) {
+    console.log('Payload Permissions:', values)
+    // TODO: call API or Server Action to save permissions
   }
 
   return (
-    <>
-      <section>
-       
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Digite o nome do cargo" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {/* Permissões (Dual List) */}
+        <FormField
+          control={form.control}
+          name="permissions"
+          render={({ field }) => {
+            const selectedIds: string[] = Array.isArray(field.value) ? field.value : []
+            return (
+              <FormItem>
+                <FormLabel>Permissões</FormLabel>
+                <FormControl>
+                  <div className="grid grid-cols-2 gap-6 mt-2">
+                    {/* Selecionadas */}
+                    <div>
+                      <h3 className="text-sm font-medium mb-2">Selecionadas</h3>
+                      <div className="space-y-2">
+                        {allPermissions
+                          .filter(p => selectedIds.includes(p.id))
+                          .map(p => (
+                            <div
+                              key={p.id}
+                              className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded"
+                            >
+                              <span className="text-sm">{p.name}</span>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() =>
+                                  field.onChange(
+                                    selectedIds.filter(pid => pid !== p.id)
+                                  )
+                                }
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
 
-            <Button type="submit">Salvar Alteracoes</Button>
-          </form>
-        </Form>
+                    {/* Disponíveis */}
+                    <div>
+                      <h3 className="text-sm font-medium mb-2">Disponíveis</h3>
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {allPermissions
+                          .filter(p => !selectedIds.includes(p.id))
+                          .map(p => (
+                            <div
+                              key={p.id}
+                              className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded"
+                            >
+                              <span>{p.name}</span>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                onClick={() =>
+                                  field.onChange([...selectedIds, p.id])
+                                }
+                              >
+                                <Plus className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )
+          }}
+        />
 
-      </section>
-    </>
+        <Button type="submit">Salvar Alterações</Button>
+      </form>
+    </Form>
   )
 }
