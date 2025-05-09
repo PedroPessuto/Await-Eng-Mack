@@ -110,7 +110,7 @@ function RolesTable({ columns, data }: DataTableProps) {
             onChange={event => setGlobalFilter(event.target.value)}
             className="w-full sm:min-w-sm lg:min-w-md"
           />
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div>
                 <Button variant="outline">
@@ -124,7 +124,7 @@ function RolesTable({ columns, data }: DataTableProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem>Query Personalizada</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
 
         {table.getFilteredSelectedRowModel().rows.length > 0 ? (

@@ -106,7 +106,7 @@ function MembersTable({ columns, data }: DataTableProps) {
             onChange={event => setGlobalFilter(event.target.value)}
             className="w-full sm:min-w-sm lg:min-w-md"
           />
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div>
                 <Button variant="outline">
@@ -123,7 +123,7 @@ function MembersTable({ columns, data }: DataTableProps) {
               <DropdownMenuItem>Team</DropdownMenuItem>
               <DropdownMenuItem>Subscription</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
 
         {table.getFilteredSelectedRowModel().rows.length > 0 ? (
