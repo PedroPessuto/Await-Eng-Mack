@@ -2,11 +2,20 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { toast } from 'sonner'
 
 interface ButtonsProps {
   section: string
@@ -15,7 +24,7 @@ interface ButtonsProps {
 export function Buttons({ section }: ButtonsProps) {
   const router = useRouter()
 
-  // Schema and form for Cargos
+  // Schema e form para Cargos
   const cargoSchema = z.object({
     name: z.string().min(1, 'Nome é obrigatório').max(100),
     description: z.string().optional(),
@@ -32,11 +41,24 @@ export function Buttons({ section }: ButtonsProps) {
   })
 
   const onSubmitCargo = async (values: CargoFormData) => {
-
-    
+    try {
+      const res = await fetch('/api/private/roles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      })
+      if (!res.ok) throw new Error('Erro ao criar cargo')
+      await res.json()
+      toast.success('Cargo criado com sucesso')
+      resetCargo()
+      router.refresh()
+    } catch (error) {
+      console.error(error)
+      toast.error('Erro ao criar cargo')
+    }
   }
 
-  // Schema and form for Categorias
+  // Schema e form para Categorias
   const categorySchema = z.object({
     name: z.string().min(1, 'Nome é obrigatório').max(100),
   })
@@ -52,7 +74,21 @@ export function Buttons({ section }: ButtonsProps) {
   })
 
   const onSubmitCategory = async (values: CategoryFormData) => {
-    
+    try {
+      const res = await fetch('/api/private/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      })
+      if (!res.ok) throw new Error('Erro ao criar categoria')
+      await res.json()
+      toast.success('Categoria criada com sucesso')
+      resetCategory()
+      router.refresh()
+    } catch (error) {
+      console.error(error)
+      toast.error('Erro ao criar categoria')
+    }
   }
 
   return (
@@ -70,13 +106,23 @@ export function Buttons({ section }: ButtonsProps) {
             <form onSubmit={handleSubmitCargo(onSubmitCargo)} className="space-y-4">
               <div className="space-y-1">
                 <label htmlFor="cargo-name" className="block text-sm font-medium">Nome</label>
-                <input id="cargo-name" {...registerCargo('name')} className="w-full px-3 py-2 border rounded" />
+                <input
+                  id="cargo-name"
+                  {...registerCargo('name')}
+                  className="w-full px-3 py-2 border rounded"
+                />
                 {errorsCargo.name && <p className="text-red-600 text-sm">{errorsCargo.name.message}</p>}
               </div>
               <div className="space-y-1">
                 <label htmlFor="cargo-description" className="block text-sm font-medium">Descrição</label>
-                <textarea id="cargo-description" {...registerCargo('description')} className="w-full px-3 py-2 border rounded" />
-                {errorsCargo.description && <p className="text-red-600 text-sm">{errorsCargo.description.message}</p>}
+                <textarea
+                  id="cargo-description"
+                  {...registerCargo('description')}
+                  className="w-full px-3 py-2 border rounded"
+                />
+                {errorsCargo.description && (
+                  <p className="text-red-600 text-sm">{errorsCargo.description.message}</p>
+                )}
               </div>
               <DialogFooter>
                 <Button type="submit">Salvar</Button>
@@ -96,11 +142,20 @@ export function Buttons({ section }: ButtonsProps) {
               <DialogTitle>Criar Nova Categoria</DialogTitle>
               <DialogDescription>Preencha o nome da nova categoria.</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleSubmitCategory(onSubmitCategory)} className="space-y-4">
+            <form
+              onSubmit={handleSubmitCategory(onSubmitCategory)}
+              className="space-y-4"
+            >
               <div className="space-y-1">
                 <label htmlFor="category-name" className="block text-sm font-medium">Nome</label>
-                <input id="category-name" {...registerCategory('name')} className="w-full px-3 py-2 border rounded" />
-                {errorsCategory.name && <p className="text-red-600 text-sm">{errorsCategory.name.message}</p>}
+                <input
+                  id="category-name"
+                  {...registerCategory('name')}
+                  className="w-full px-3 py-2 border rounded"
+                />
+                {errorsCategory.name && (
+                  <p className="text-red-600 text-sm">{errorsCategory.name.message}</p>
+                )}
               </div>
               <DialogFooter>
                 <Button type="submit">Salvar</Button>
